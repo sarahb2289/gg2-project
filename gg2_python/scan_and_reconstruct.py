@@ -18,13 +18,13 @@ def scan_and_reconstruct(photons, material, phantom, scale, angles, mas=10000, a
 	# convert source (photons per (mas, cm^2)) to photons
 
 	# create sinogram from phantom data, with received detector values
-
+	sinogram=ct_scan(photons,material,phantom,scale,angles)
 	# convert detector values into calibrated attenuation values
-
+	linatt=ct_calibrate(photons,material,sinogram,scale)
 	# Ram-Lak
 
 	# Back-projection
-
+	phantom=back_project(linatt)
 	# convert to Hounsfield Units
 
 	return phantom

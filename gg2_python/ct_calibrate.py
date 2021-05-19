@@ -3,6 +3,7 @@ import scipy
 from scipy import interpolate
 from ct_scan import ct_scan
 from ct_phantom import ct_phantom
+from attenuate import attenuate
 
 def ct_calibrate(photons, material, sinogram, scale, correct=True):
 
@@ -16,15 +17,11 @@ def ct_calibrate(photons, material, sinogram, scale, correct=True):
 	# Get dimensions and work out detection for just air of twice the side
 	# length (has to be the same as in ct_scan.py)
 	n = sinogram.shape[1]
-	angles=sinogram.shape[0]
-	X = ct_phantom(material.name,2*n,1)
-	airscan=ct_scan(photons,material,X,scale,angles)
-	Io=np.sum(airscan[0])
+	
+	airscan=attenuate(photons,material.coeff('Air'), 2*n)
+	Io=np.sum(airscan)
 
 	# perform calibration
-
-	for index, path in np.ndenumerate(sinogram):
-		print(index[0],index[1],path)
-		sinogram[index[0]][index[1]] = -np.log(path/Io)
-
+	sinogram=-np.log(sinogram/Io)
+	
 	return sinogram
