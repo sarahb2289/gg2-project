@@ -22,9 +22,9 @@ def scan_and_reconstruct(photons, material, phantom, scale, angles, mas=10000, a
 	# convert detector values into calibrated attenuation values
 	linatt=ct_calibrate(photons,material,sinogram,scale)
 	# Ram-Lak
-
+	ramlak=ramp_filter(linatt,scale,alpha)
 	# Back-projection
-	phantom=back_project(linatt)
+	phantom=back_project(ramlak)
 	# convert to Hounsfield Units
 
 	return phantom

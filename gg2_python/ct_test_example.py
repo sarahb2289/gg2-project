@@ -30,6 +30,7 @@ def test_1():
 	save_draw(p, 'results', 'test_1_phantom')
 
 	# how to check whether these results are actually correct?
+	
 
 def test_2():
 	# explain what this test is for
@@ -58,12 +59,32 @@ def test_3():
 	f.close()
 
 	# how to check whether these results are actually correct?
+	coeffs=material.coeff('Soft Tissue')
+	energies=material.mev
+	i = np.where(energies==0.07)
+	value=coeffs[i]
+	#f = open('results/test_3_output.txt', mode='r')
+	#line=f.read()
+	mean=np.mean(y[64:192, 64:192])
+
+	try:
+		diff=abs(mean-value)/mean
+		assert diff<0.1
+	except AssertionError:
+		print(diff)
+		print(mean)
+		print(value)
+		print("Test 3 Failed")
+
+
+
+
 
 
 # Run the various tests
-print('Test 1')
-test_1()
-print('Test 2')
-test_2()
+#print('Test 1')
+#test_1()
+#print('Test 2')
+#test_2()
 print('Test 3')
 test_3()

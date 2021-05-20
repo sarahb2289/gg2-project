@@ -18,7 +18,7 @@ def ct_calibrate(photons, material, sinogram, scale, correct=True):
 	# length (has to be the same as in ct_scan.py)
 	n = sinogram.shape[1]
 	
-	airscan=attenuate(photons,material.coeff('Air'), 2*n)
+	airscan=attenuate(photons,material.coeff('Air'), scale*2*n)
 	Io=np.sum(airscan)
 
 	# perform calibration
