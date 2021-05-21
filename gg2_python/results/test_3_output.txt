@@ -1,1 +1,4 @@
-Mean value is 0.0003711411917946085
+Mean value of small square in middle is: 0.20332721013258043
+The true value obtained from material linear attenuation coefficient is: 0.203963689535233
+Giving a percentage difference of: 0.3120552506688338%
+Test 3 Successful

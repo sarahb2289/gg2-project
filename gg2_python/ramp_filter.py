@@ -16,42 +16,41 @@ def ramp_filter(sinogram, scale, alpha=0.001):
 	angles = sinogram.shape[0]
 	n = sinogram.shape[1]
 
-	#Set up filter to be at least twice as long as input
+	#Set up filter to be at least twice as long as input to avoid issues with circular convolution
 	m = np.ceil(np.log(2*n-1) / np.log(2))
 	m = int(2 ** m)
 
 	#Create ramp filter
+
+	# Calculate maximum frequency, which will be equal to Nyquist frequency in order to avoid aliasing
 	wmax=1/(2*scale)
-	print(wmax)
-	size=math.floor(2*wmax)
-	timestep=2*wmax/m
-	w=np.fft.fftfreq(math.floor(size/timestep))
-	#w=np.linspace(-wmax,wmax, m)
-	ramp=np.abs(w)*timestep
-	#print(ramp.shape)
-	print(m)
-	#ramp1=ramp
-	#ramp1[:int(m/2)]=ramp[int(-m/2):]
-	#ramp1[int(m/2)+1:]=np.flip(ramp[:int(m/2)]) #fft freq
+	# Retrieve set of frequencies that match format for fft (length m and interval scale)
+	w=np.fft.fftfreq(m,d=scale)
+	# Create ramp equal to absolute values of frequencies 
+	ramp=np.abs(w)
+	# Set DC value to slightly above zero
+	ramp[0]=1/6*ramp[1]
+
 
 	# Create raised cosine filter
-	#raised_cos=np.abs(w)*(np.cos(w/2*m))**alpha
-	#raised_cos[0]=raised_cos[1]/6 #1/6th of 1st value
 
-	plt.plot(ramp)
-	#raised_cos1=raised_cos
-	#raised_cos1[:int(m/2)]=raised_cos[int(-m/2):]
-	#raised_cos1[int(m/2):]=np.flip(raised_cos[:int(m/2)])
-	#plt.plot(raised_cos1)
+	# Create raised cosine filter according to eq 14 from handout
+	raised_cos1=np.abs(w)*((np.cos(w/(2*m))))**alpha
+	# Set DC value to slightly above zero
+	raised_cos1[0]=(raised_cos1[1])/6 
 
 
 	# apply filter to all angles
 	print('Ramp filtering')
 	for i in range(angles):
+		# Take fourier transform to allow multiplication in frequency domain rather than convolution in time domain
+		# Convolution is more computationally expensive
+		# fft function adds zero padding to make output length match filter array
 		Fsinogram=np.fft.fft(sinogram[i],m)
-		#print(ramp.shape,Fsinogram.shape)
-		Fproduct=ramp*Fsinogram
-		product=np.real(np.fft.ifft(Fproduct)[:n])
+		#Fproduct=ramp*Fsinogram #Can choose between using pure ramp filter or raised cosine filter
+		Fproduct=raised_cos1*Fsinogram 
+		# Inverse fourier transform to move back into time domain, only keep real part to discard any effects of non-ideality
+		product=np.real(np.fft.ifft(Fproduct)[:n]) # Only take first n values from m length array
 		sinogram[i]=product
 
 

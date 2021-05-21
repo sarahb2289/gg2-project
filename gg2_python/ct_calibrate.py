@@ -14,14 +14,15 @@ def ct_calibrate(photons, material, sinogram, scale, correct=True):
 	material structure containing names, linear attenuation coefficients and
 	energies in mev, and scale is the size of each pixel in x, in cm."""
 
-	# Get dimensions and work out detection for just air of twice the side
-	# length (has to be the same as in ct_scan.py)
+	# Get dimensions 
 	n = sinogram.shape[1]
-	
+
+	# Work out attenuated photon energies for single path through air of depth twice the side length of square array
 	airscan=attenuate(photons,material.coeff('Air'), scale*2*n)
+	#Sum along path to get total energy according to eq 3 from handout
 	Io=np.sum(airscan)
 
-	# perform calibration
+	# perform calibration according to eq 4 from handout
 	sinogram=-np.log(sinogram/Io)
 	
 	return sinogram

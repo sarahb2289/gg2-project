@@ -38,8 +38,7 @@ def attenuate(original_energy, coeff, depth):
     if len(depth) != samples:
         raise ValueError('input depth has different number of samples to input original_energy')
 
-    # Work out residual energy for each depth and at each energy
+    # Work out residual energy for each depth and at each energy according to eq 1 from handout
     residual_energy=original_energy*np.exp(-np.outer(coeff,depth))
         
-
     return residual_energy
