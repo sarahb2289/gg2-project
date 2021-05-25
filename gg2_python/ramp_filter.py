@@ -35,7 +35,7 @@ def ramp_filter(sinogram, scale, alpha=0.001):
 	# Create raised cosine filter
 
 	# Create raised cosine filter according to eq 14 from handout
-	raised_cos1=np.abs(w)*((np.cos(w/(2*m))))**alpha
+	raised_cos1=np.abs(w)*((np.cos((w*np.pi)/(2*wmax)))**alpha)
 	# Set DC value to slightly above zero
 	raised_cos1[0]=(raised_cos1[1])/6 
 
