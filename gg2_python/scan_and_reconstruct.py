@@ -23,8 +23,9 @@ def scan_and_reconstruct(photons, material, phantom, scale, angles, mas=10000, a
 	linatt=ct_calibrate(photons,material,sinogram,scale)
 	# Apply Ram-Lak filter
 	ramlak=ramp_filter(linatt,scale,alpha)
+	# ramlak=linatt
 	# Back-projection
 	phantom=back_project(ramlak)
 	# convert to Hounsfield Units (not yet implemented)
-
-	return phantom
+	hu_phantom=hu(photons,material,phantom,scale)
+	return hu_phantom

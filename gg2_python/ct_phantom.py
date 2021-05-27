@@ -42,6 +42,7 @@ def ct_phantom(names, n, type, metal=None):
 		x = ct_phantom(names, n, type, metal) creates a CT phantom in x of
 		size (n X n), and type given by type:
 
+		0 - offset point attenuator
 		1 - simple circle for looking at calibration issues
 		2 - point attenuator for looking at resolution
 		3 - single large hip replacement
@@ -93,6 +94,11 @@ def ct_phantom(names, n, type, metal=None):
 		# impulse for looking at resolution
 		x = np.zeros((n, n))
 		x[int(n / 2)][int(n / 2)] = tissue
+
+	elif type == 0:
+
+		x=np.zeros((n,n))
+		x[int(n/2)-50][int(n/2)-30] = tissue
 		
 	elif type == 8:
 

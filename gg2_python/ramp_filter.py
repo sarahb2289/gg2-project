@@ -47,7 +47,7 @@ def ramp_filter(sinogram, scale, alpha=0.001):
 		# Convolution is more computationally expensive
 		# fft function adds zero padding to make output length match filter array
 		Fsinogram=np.fft.fft(sinogram[i],m)
-		#Fproduct=ramp*Fsinogram #Can choose between using pure ramp filter or raised cosine filter
+		# Fproduct=ramp*Fsinogram #Can choose between using pure ramp filter or raised cosine filter
 		Fproduct=raised_cos1*Fsinogram 
 		# Inverse fourier transform to move back into time domain, only keep real part to discard any effects of non-ideality
 		product=np.real(np.fft.ifft(Fproduct)[:n]) # Only take first n values from m length array
